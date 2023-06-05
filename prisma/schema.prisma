@@ -1,0 +1,32 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id         String    @id
+    username   String
+    respondeu  Int       @default(0)
+    tempoTotal Int       @default(0)
+    createdAt  DateTime  @default(now())
+    messages   Message[]
+}
+
+model Message {
+    id              Int      @id @default(autoincrement())
+    content         String
+    sentAt          DateTime @default(now())
+    audioSeconds    Int
+    stickerCount    Int
+    charactersCount Int
+    type            String
+
+    sentBy   User   @relation(fields: [sentById], references: [id])
+    sentById String
+
+    @@map(name: "messages")
+}
